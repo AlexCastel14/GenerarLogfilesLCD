@@ -59,7 +59,8 @@ def CrearArchivo(NumSerie,destino,versionNoAN,day,month,year,time,reporteHTML): 
     EndTime=CalcularEndtime(time,reporteHTML)
     file.write("20 " + EndTime + "\n")
     file.write("32 FCT")
-    print("Reporte Generado!")
+    #print("Reporte Generado!")
+    tk.messagebox.showinfo("Reporte Generado", "El reporte ha sido generado con exito!")
     serialEntry.delete(0,len(NumSerie))
 
 def check():                                                 #Busca y lee reportes buscando un pass
@@ -79,6 +80,7 @@ def check():                                                 #Busca y lee report
     status=0                                                                    #STATUS 0 SIN REGISTRO,  1 PASS, 2 FAIL
     TestDate=False
     TestTime=False
+    Datos=False
     for root, dirs, files in os.walk(initial_dir):
         #Agregar IF para romper bucle
         for name in files:
@@ -93,8 +95,24 @@ def check():                                                 #Busca y lee report
                     if line.startswith("<TD><B>Passed"):                        #Obtiene el Pass del reporte y actualiza status
                         print("Passed")
                         status=1
-                    if status==True:                                            #Obtiene la Fecha de Prueba
-                        if i==97:
+                    if status==1:                                               
+                        if line.startswith("<td> Model Number:"):               #Verifica que tenga el modelo guardado en la tarjeta
+                            splitedLinePN=line.split()
+                            PN=splitedLinePN[3]
+                            print(PN)
+                            if PN=="</td>":
+                                PNstatus=False
+                            else:
+                                PNstatus=True
+                        if line.startswith("<td> Serial Number:"):              #Verifica que tenga el serial guardado en la tarjeta
+                            splitedLineSerial=line.split()
+                            Serial=splitedLineSerial[3]
+                            print(Serial)
+                            if Serial=="</td>":
+                                Serialstatus=False
+                            else:
+                                Serialstatus=True
+                        if i==97:                                               #Obtiene la Fecha de Prueba
                             splittedLine=line.split()
                             date=splittedLine[1]
                             print(date)
@@ -115,7 +133,7 @@ def check():                                                 #Busca y lee report
                                 hour=hour+12
                                 time=str(hour)+":"+splittedTime[1]+":"+splittedTime[2]
                             TestTime=True
-                        if TestDate==True and status==1 and TestTime==True:
+                        if TestDate==True and status==1 and TestTime==True and PNstatus==True and Serialstatus==True:
                             CrearArchivo(NumSerie,destino,versionNoAN,day,month,year,time,reporteHTML)
                             return
                     if line.startswith("<TD><B>Failed"):                        #Verifica Fail y actualiza status

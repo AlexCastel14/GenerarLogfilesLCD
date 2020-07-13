@@ -1,0 +1,14 @@
+Origen: D:/Entorno de Pruebas/Reportes/
+Destino: D:/Entorno de Pruebas/Empaque/
+
+
+
+
+
+
+
+
+
+
+#Hecho por Alex Castellanos
+#No Borrar

@@ -80,7 +80,8 @@ def check():                                                 #Busca y lee report
     status=0                                                                    #STATUS 0 SIN REGISTRO,  1 PASS, 2 FAIL
     TestDate=False
     TestTime=False
-    Datos=False
+    PNstatus=False
+    Serialstatus=False
     for root, dirs, files in os.walk(initial_dir):
         #Agregar IF para romper bucle
         for name in files:

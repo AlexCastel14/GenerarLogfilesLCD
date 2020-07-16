@@ -162,3 +162,4 @@ serialEntry.bind("<Return>", lambda _: check())
 center(window)
 
 window.mainloop()
+ #THIS IS A TEST

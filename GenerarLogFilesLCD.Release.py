@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.messagebox
 import os
 
 #Direcciones de respaldo y empaque
@@ -12,15 +13,17 @@ def center(window):                                                             
        y = (window.winfo_screenheight() // 2) - (window.winfo_height() // 2)
        window.geometry('+{}+{}'.format(x, y))
 
-def CalcularEndtime(time,reporteHTML):                                          #Calcula el la hora en que se terminó la prueba
+def CalcularEndtime(time,reporteHTMLPath):                                          #Calcula el la hora en que se terminó la prueba
     splittedTime=time.split(":")
     hour=int(splittedTime[0])
     min=int(splittedTime[1])
     sec=int(splittedTime[2])
+    reporteHTML=open(reporteHTMLPath,"r",errors='ignore')
     i=0
     for line in reporteHTML:
         i=i+1
-        if i==8:
+        if i==113:
+            print(line)
             splittedExecutionTime=line[7:].split(".")
             ExecutionTime=splittedExecutionTime[0]
             sec=sec+int(ExecutionTime)
@@ -37,7 +40,7 @@ def CalcularEndtime(time,reporteHTML):                                          
             return(EndTime)
 
 
-def CrearArchivo(NumSerie,destino,versionNoAN,day,month,year,time,reporteHTML): #Crea logfile para empaque
+def CrearArchivo(NumSerie,destino,versionNoAN,day,month,year,time,reporteHTMLPath): #Crea logfile para empaque
     sn=NumSerie
     filePath=destino+sn+"_PASS.txt"
     version="AN"+versionNoAN
@@ -56,15 +59,15 @@ def CrearArchivo(NumSerie,destino,versionNoAN,day,month,year,time,reporteHTML): 
     file.write("17 "+ version + "\n")
     file.write("18 "+ sn + "\n")
     file.write("19 " + day + "." + month + "." + year + "\n")
-    EndTime=CalcularEndtime(time,reporteHTML)
+    EndTime=CalcularEndtime(time,reporteHTMLPath)
     file.write("20 " + EndTime + "\n")
     file.write("32 FCT")
-    #print("Reporte Generado!")
+    print("Reporte Generado!")
     tk.messagebox.showinfo("Reporte Generado", "El reporte ha sido generado con exito!")
     serialEntry.delete(0,len(NumSerie))
 
 def check():                                                 #Busca y lee reportes buscando un pass
-    print("----------------------------------------------------------------")
+    print("-------------------  Buscando registo...  ---------------------")
     pathFile=open("Path.txt","r")                                               #Abre path.txt file
     for line in pathFile:
         if line.startswith("Origen: "):
@@ -83,10 +86,8 @@ def check():                                                 #Busca y lee report
     PNstatus=False
     Serialstatus=False
     for root, dirs, files in os.walk(initial_dir):
-        #Agregar IF para romper bucle
         for name in files:
             if name.startswith(filename):
-                #print(name)
                 versionNoAN=name[15:23]
                 reporteHTMLPath=os.path.abspath(os.path.join(root, name))
                 reporteHTML=open(reporteHTMLPath,"r",errors='ignore')
@@ -135,7 +136,7 @@ def check():                                                 #Busca y lee report
                                 time=str(hour)+":"+splittedTime[1]+":"+splittedTime[2]
                             TestTime=True
                         if TestDate==True and status==1 and TestTime==True and PNstatus==True and Serialstatus==True:
-                            CrearArchivo(NumSerie,destino,versionNoAN,day,month,year,time,reporteHTML)
+                            CrearArchivo(NumSerie,destino,versionNoAN,day,month,year,time,reporteHTMLPath)
                             return
                     if line.startswith("<TD><B>Failed"):                        #Verifica Fail y actualiza status
                         print("Failed")

@@ -62,7 +62,7 @@ def CrearArchivo(NumSerie,destino,versionNoAN,day,month,year,time,reporteHTMLPat
     EndTime=CalcularEndtime(time,reporteHTMLPath)
     file.write("20 " + EndTime + "\n")
     file.write("32 FCT")
-    print("Reporte Generado!")
+    #print("Reporte Generado!")
     tk.messagebox.showinfo("Reporte Generado", "El reporte ha sido generado con exito!")
     serialEntry.delete(0,len(NumSerie))
 
@@ -73,11 +73,11 @@ def check():                                                 #Busca y lee report
         if line.startswith("Origen: "):
             x=line.strip()
             initial_dir=x[8:]
-            print(initial_dir)
+            #print(initial_dir)
         if line.startswith("Destino: "):
             y=line.strip()
             destino=y[9:]
-            print(destino)
+            #print(destino)
     NumSerie=serialEntry.get()
     filename="LcdMain_Report[" + NumSerie
     status=0                                                                    #STATUS 0 SIN REGISTRO,  1 PASS, 2 FAIL

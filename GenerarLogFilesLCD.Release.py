@@ -160,6 +160,7 @@ window=tk.Tk()                                                                  
 window.title("Generar Logfiles LCD")
 window.resizable(0,0)
 window.geometry("450x140")
+window.iconphoto(True, tk.PhotoImage(file="melecs1.png"))
 texto=tk.Label(window,text="Introduce un numero de serie:", font=16)
 texto.pack()
 texto.config(pady=20)
@@ -170,4 +171,3 @@ serialEntry.bind("<Return>", lambda _: check())
 center(window)
 
 window.mainloop()
- #THIS IS A TEST

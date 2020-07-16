@@ -1,10 +1,10 @@
-Origen: Z:/#-public/REPORTES/LCD2/
+Origen: Z:/#-public/aPruebas/Python/Entorno de Pruebas/Reportes/
 Destino: Z:/#-public/empaque tht9/
 
 
 
 
-
+Z:/#-public/REPORTES/LCD2/
 
 
 

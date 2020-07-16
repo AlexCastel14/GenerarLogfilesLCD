@@ -90,6 +90,7 @@ def check():                                                 #Busca y lee report
             if name.startswith(filename):
                 versionNoAN=name[15:23]
                 reporteHTMLPath=os.path.abspath(os.path.join(root, name))
+                #print(reporteHTMLPath)
                 reporteHTML=open(reporteHTMLPath,"r",errors='ignore')
                 i=0
                 for line in reporteHTML:
@@ -138,14 +139,20 @@ def check():                                                 #Busca y lee report
                         if TestDate==True and status==1 and TestTime==True and PNstatus==True and Serialstatus==True:
                             CrearArchivo(NumSerie,destino,versionNoAN,day,month,year,time,reporteHTMLPath)
                             return
+                        if TestDate==True and status==1 and TestTime==True and PNstatus==False and Serialstatus==False:
+                            tk.messagebox.showwarning("Pieza sin datos","Pieza sin datos de GE")
+                            serialEntry.delete(0,len(NumSerie))
+                            return
                     if line.startswith("<TD><B>Failed"):                        #Verifica Fail y actualiza status
                         print("Failed")
                         status=2
 
     if status==0:
         print("Sin registro")
+        tk.messagebox.showerror("Sin Registro","La tarjeta no tiene registro de FT")
         serialEntry.delete(0,len(NumSerie))
     if status==2:
+        tk.messagebox.showerror("Fail","La tarjeta falló en FT")
         print("La tarjeta falló")
         serialEntry.delete(0,len(NumSerie))
 

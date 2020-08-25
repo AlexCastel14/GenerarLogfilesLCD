@@ -86,66 +86,67 @@ def check():                                                 #Busca y lee report
     PNstatus=False
     Serialstatus=False
     for root, dirs, files in os.walk(initial_dir):
-        for name in files:
-            if name.startswith(filename):
-                versionNoAN=name[15:23]
-                reporteHTMLPath=os.path.abspath(os.path.join(root, name))
-                #print(reporteHTMLPath)
-                reporteHTML=open(reporteHTMLPath,"r",errors='ignore')
-                i=0
-                for line in reporteHTML:
-                    i=i+1
-                    if line.startswith("<TD><B>Passed"):                        #Obtiene el Pass del reporte y actualiza status
+        pass
+    for name in files:
+        if name.startswith(filename):
+            versionNoAN=name[15:23]
+            reporteHTMLPath=os.path.abspath(os.path.join(root, name))
+            #print(reporteHTMLPath)
+            reporteHTML=open(reporteHTMLPath,"r",errors='ignore')
+            i=0
+            for line in reporteHTML:
+                i=i+1
+                if line.startswith("<TD><B>Passed"):                        #Obtiene el Pass del reporte y actualiza status
                         print("Passed")
                         status=1
-                    if status==1:                                               
-                        if line.startswith("<td> Model Number:"):               #Verifica que tenga el modelo guardado en la tarjeta
-                            splitedLinePN=line.split()
-                            PN=splitedLinePN[3]
-                            print(PN)
-                            if PN=="</td>":
-                                PNstatus=False
-                            else:
-                                PNstatus=True
-                        if line.startswith("<td> Serial Number:"):              #Verifica que tenga el serial guardado en la tarjeta
-                            splitedLineSerial=line.split()
-                            Serial=splitedLineSerial[3]
-                            print(Serial)
-                            if Serial=="</td>":
-                                Serialstatus=False
-                            else:
-                                Serialstatus=True
-                        if i==97:                                               #Obtiene la Fecha de Prueba
-                            splittedLine=line.split()
-                            date=splittedLine[1]
-                            print(date)
-                            splittedDate=date.split("/")
-                            if not len(splittedDate)==3:
-                                splittedDate=date.split("-")
-                            day=splittedDate[1]
-                            month=splittedDate[0]
-                            year=splittedDate[2]
-                            TestDate=True
-                        if i==105:                                              #Obtiene Hora de Prueba
+                if status==1:                                               
+                    if line.startswith("<td> Model Number:"):               #Verifica que tenga el modelo guardado en la tarjeta
+                        splitedLinePN=line.split()
+                        PN=splitedLinePN[3]
+                        print(PN)
+                        if PN=="</td>":
+                            PNstatus=False
+                        else:
+                            PNstatus=True
+                    if line.startswith("<td> Serial Number:"):              #Verifica que tenga el serial guardado en la tarjeta
+                        splitedLineSerial=line.split()
+                        Serial=splitedLineSerial[3]
+                        print(Serial)
+                        if Serial=="</td>":
+                            Serialstatus=False
+                        else:
+                            Serialstatus=True
+                    if i==97:                                               #Obtiene la Fecha de Prueba
+                        splittedLine=line.split()
+                        date=splittedLine[1]
+                        print(date)
+                        splittedDate=date.split("/")
+                        if not len(splittedDate)==3:
+                            splittedDate=date.split("-")
+                        day=splittedDate[1]
+                        month=splittedDate[0]
+                        year=splittedDate[2]
+                        TestDate=True
+                    if i==105:                                              #Obtiene Hora de Prueba
                             splittedLine=line.split()
                             time=splittedLine[1]
                             splittedTime=time.split(":")
                             hour=splittedTime[0]
                             hour=int(hour)
-                            if splittedLine[2]=="PM" and hour<12:
-                                hour=hour+12
-                                time=str(hour)+":"+splittedTime[1]+":"+splittedTime[2]
-                            TestTime=True
-                        if TestDate==True and status==1 and TestTime==True and PNstatus==True and Serialstatus==True:
-                            CrearArchivo(NumSerie,destino,versionNoAN,day,month,year,time,reporteHTMLPath)
-                            return
-                        if TestDate==True and status==1 and TestTime==True and PNstatus==False and Serialstatus==False:
-                            tk.messagebox.showwarning("Pieza sin datos","Pieza sin datos de GE")
-                            serialEntry.delete(0,len(NumSerie))
-                            return
-                    if line.startswith("<TD><B>Failed"):                        #Verifica Fail y actualiza status
-                        print("Failed")
-                        status=2
+                        if splittedLine[2]=="PM" and hour<12:
+                            hour=hour+12
+                            time=str(hour)+":"+splittedTime[1]+":"+splittedTime[2]
+                        TestTime=True
+                    if TestDate==True and status==1 and TestTime==True and PNstatus==True and Serialstatus==True:
+                        CrearArchivo(NumSerie,destino,versionNoAN,day,month,year,time,reporteHTMLPath)
+                        return
+                    if TestDate==True and status==1 and TestTime==True and PNstatus==False and Serialstatus==False:
+                        tk.messagebox.showwarning("Pieza sin datos","Pieza sin datos de GE")
+                        serialEntry.delete(0,len(NumSerie))
+                        return
+                if line.startswith("<TD><B>Failed"):                        #Verifica Fail y actualiza status
+                    print("Failed")
+                    status=2
 
     if status==0:
         print("Sin registro")

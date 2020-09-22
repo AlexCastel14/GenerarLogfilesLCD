@@ -73,7 +73,7 @@ def check():                                                 #Busca y lee report
         if line.startswith("Origen: "):
             x=line.strip()
             initial_dir=x[8:]
-            #print(initial_dir)
+            print(initial_dir)
         if line.startswith("Destino: "):
             y=line.strip()
             destino=y[9:]
@@ -87,20 +87,31 @@ def check():                                                 #Busca y lee report
     Serialstatus=False
     for root, dirs, files in os.walk(initial_dir):
         pass
+    #print(files)
     for name in files:
-        if name.startswith(filename):
+        if name.find(NumSerie):
+            #print("Report found!")
             versionNoAN=name[15:23]
             reporteHTMLPath=os.path.abspath(os.path.join(root, name))
             #print(reporteHTMLPath)
             reporteHTML=open(reporteHTMLPath,"r",errors='ignore')
             i=0
+            #print(reporteHTML)
             for line in reporteHTML:
                 i=i+1
-                if line.startswith("<TD><B>Passed"):                        #Obtiene el Pass del reporte y actualiza status
-                        print("Passed")
-                        status=1
-                if status==1:                                               
+                if line.startswith("<TD><B>Passed"):                        #Obtiene el Pass del reporte y actualiza status 
+                    print("Passed")
+                    status=1
+                    break
+                    print(status)
+                if line.startswith("<TD><B>Failed"):                        #Verifica Fail y actualiza status
+                    print("Failed")
+                    status=2
+                        
+            if status==1:
+                for line in reporteHTML:                                               
                     if line.startswith("<td> Model Number:"):               #Verifica que tenga el modelo guardado en la tarjeta
+                        print(line)
                         splitedLinePN=line.split()
                         PN=splitedLinePN[3]
                         print(PN)
@@ -128,11 +139,11 @@ def check():                                                 #Busca y lee report
                         year=splittedDate[2]
                         TestDate=True
                     if i==105:                                              #Obtiene Hora de Prueba
-                            splittedLine=line.split()
-                            time=splittedLine[1]
-                            splittedTime=time.split(":")
-                            hour=splittedTime[0]
-                            hour=int(hour)
+                        splittedLine=line.split()
+                        time=splittedLine[1]
+                        splittedTime=time.split(":")
+                        hour=splittedTime[0]
+                        hour=int(hour)
                         if splittedLine[2]=="PM" and hour<12:
                             hour=hour+12
                             time=str(hour)+":"+splittedTime[1]+":"+splittedTime[2]
@@ -144,9 +155,7 @@ def check():                                                 #Busca y lee report
                         tk.messagebox.showwarning("Pieza sin datos","Pieza sin datos de GE")
                         serialEntry.delete(0,len(NumSerie))
                         return
-                if line.startswith("<TD><B>Failed"):                        #Verifica Fail y actualiza status
-                    print("Failed")
-                    status=2
+
 
     if status==0:
         print("Sin registro")

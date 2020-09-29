@@ -98,6 +98,7 @@ def check():                                                 #Busca y lee report
             i=0
             #print(reporteHTML)
             for line in reporteHTML:
+                print(line)
                 i=i+1
                 if line.startswith("<TD><B>Passed"):                        #Obtiene el Pass del reporte y actualiza status 
                     print("Passed")

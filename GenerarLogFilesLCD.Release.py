@@ -90,32 +90,31 @@ def check():                                                 #Busca y lee report
     #print(files)
     for name in files:
         if name.find(NumSerie):
-            #print("Report found!")
+            print("Report found!")
             versionNoAN=name[15:23]
             reporteHTMLPath=os.path.abspath(os.path.join(root, name))
-            #print(reporteHTMLPath)
+            print(reporteHTMLPath)
             reporteHTML=open(reporteHTMLPath,"r",errors='ignore')
             i=0
             #print(reporteHTML)
             for line in reporteHTML:
-                print(line)
+                #print(line)
                 i=i+1
                 if line.startswith("<TD><B>Passed"):                        #Obtiene el Pass del reporte y actualiza status 
                     print("Passed")
                     status=1
-                    break
                     print(status)
                 if line.startswith("<TD><B>Failed"):                        #Verifica Fail y actualiza status
                     print("Failed")
                     status=2
-                        
-            if status==1:
-                for line in reporteHTML:                                               
+                if status==1:
+                    #print(reporteHTMLPath)
                     if line.startswith("<td> Model Number:"):               #Verifica que tenga el modelo guardado en la tarjeta
-                        print(line)
                         splitedLinePN=line.split()
+                        print("Split: " + splitedLinePN)
                         PN=splitedLinePN[3]
-                        print(PN)
+                        #print(reporteHTMLPath)
+                        print("PN: " + PN)
                         if PN=="</td>":
                             PNstatus=False
                         else:
@@ -131,7 +130,7 @@ def check():                                                 #Busca y lee report
                     if i==97:                                               #Obtiene la Fecha de Prueba
                         splittedLine=line.split()
                         date=splittedLine[1]
-                        print(date)
+                        print("Date: " + date)
                         splittedDate=date.split("/")
                         if not len(splittedDate)==3:
                             splittedDate=date.split("-")

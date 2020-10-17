@@ -23,7 +23,7 @@ def CalcularEndtime(time,reporteHTMLPath):                                      
     for line in reporteHTML:
         i=i+1
         if i==113:
-            print(line)
+            #print(line)
             splittedExecutionTime=line[7:].split(".")
             ExecutionTime=splittedExecutionTime[0]
             sec=sec+int(ExecutionTime)
@@ -90,10 +90,10 @@ def check():                                                 #Busca y lee report
     #print(files)
     for name in files:
         if name.find(NumSerie):
-            print("Report found!")
+            #print("Report found!")
             versionNoAN=name[15:23]
             reporteHTMLPath=os.path.abspath(os.path.join(root, name))
-            print(reporteHTMLPath)
+            #print(reporteHTMLPath)
             reporteHTML=open(reporteHTMLPath,"r",errors='ignore')
             i=0
             #print(reporteHTML)
@@ -103,7 +103,7 @@ def check():                                                 #Busca y lee report
                 if line.startswith("<TD><B>Passed"):                        #Obtiene el Pass del reporte y actualiza status 
                     print("Passed")
                     status=1
-                    print(status)
+                    #print(status)
                 if line.startswith("<TD><B>Failed"):                        #Verifica Fail y actualiza status
                     print("Failed")
                     status=2
@@ -111,10 +111,10 @@ def check():                                                 #Busca y lee report
                     #print(reporteHTMLPath)
                     if line.startswith("<td> Model Number:"):               #Verifica que tenga el modelo guardado en la tarjeta
                         splitedLinePN=line.split()
-                        print("Split: " + splitedLinePN)
+                        #print("Split: " + splitedLinePN)
                         PN=splitedLinePN[3]
                         #print(reporteHTMLPath)
-                        print("PN: " + PN)
+                        #print("PN: " + PN)
                         if PN=="</td>":
                             PNstatus=False
                         else:
@@ -122,7 +122,7 @@ def check():                                                 #Busca y lee report
                     if line.startswith("<td> Serial Number:"):              #Verifica que tenga el serial guardado en la tarjeta
                         splitedLineSerial=line.split()
                         Serial=splitedLineSerial[3]
-                        print(Serial)
+                        #print(Serial)
                         if Serial=="</td>":
                             Serialstatus=False
                         else:
@@ -130,7 +130,7 @@ def check():                                                 #Busca y lee report
                     if i==97:                                               #Obtiene la Fecha de Prueba
                         splittedLine=line.split()
                         date=splittedLine[1]
-                        print("Date: " + date)
+                        #print("Date: " + date)
                         splittedDate=date.split("/")
                         if not len(splittedDate)==3:
                             splittedDate=date.split("-")

@@ -148,7 +148,8 @@ def check():                                                 #Busca y lee report
                             hour=hour+12
                             time=str(hour)+":"+splittedTime[1]+":"+splittedTime[2]
                         TestTime=True
-                    if TestDate==True and status==1 and TestTime==True and PNstatus==True and Serialstatus==True:
+                    #if TestDate==True and status==1 and TestTime==True and PNstatus==True and Serialstatus==True:
+                    if TestDate==True and status==1 and TestTime==True:
                         CrearArchivo(NumSerie,destino,versionNoAN,day,month,year,time,reporteHTMLPath)
                         return
                     if TestDate==True and status==1 and TestTime==True and PNstatus==False and Serialstatus==False:

@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.messagebox
 import os
+import datetime
 
 def center(window):                                                             #Centra la ventana en la pantalla
        window.update_idletasks()
@@ -56,6 +57,9 @@ def CrearArchivo(NumSerie,destino,versionNoAN,day,month,year,time,reporteHTMLPat
     EndTime=CalcularEndtime(time,reporteHTMLPath)
     file.write("20 " + EndTime + "\n")
     file.write("32 FCT")
+    now=datetime.datetime.now()
+    logfile=open("log.txt","a")
+    logfile.write(NumSerie + " : "+ reporteHTMLPath + " : " + str(now) + "\n")
     tk.messagebox.showinfo("Reporte Generado", "El reporte ha sido generado con exito!")
     serialEntry.delete(0,len(NumSerie))
 

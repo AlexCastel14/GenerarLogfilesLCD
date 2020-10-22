@@ -2,11 +2,6 @@ import tkinter as tk
 import tkinter.messagebox
 import os
 
-#Direcciones de respaldo y empaque
-#initial_dir="Z:/#-public/REPORTES/LCD2/"
-#destino="Z:/#-public/aPruebas/Python/GenerarLogfilesLCD/"                      #Ruta para Pruebas
-#destino="Z:/#-public/empaque tht9/"
-
 def center(window):                                                             #Centra la ventana en la pantalla
        window.update_idletasks()
        x = (window.winfo_screenwidth() // 2) - (window.winfo_width() // 2)
@@ -23,7 +18,6 @@ def CalcularEndtime(time,reporteHTMLPath):                                      
     for line in reporteHTML:
         i=i+1
         if i==113:
-            #print(line)
             splittedExecutionTime=line[7:].split(".")
             ExecutionTime=splittedExecutionTime[0]
             sec=sec+int(ExecutionTime)
@@ -62,22 +56,19 @@ def CrearArchivo(NumSerie,destino,versionNoAN,day,month,year,time,reporteHTMLPat
     EndTime=CalcularEndtime(time,reporteHTMLPath)
     file.write("20 " + EndTime + "\n")
     file.write("32 FCT")
-    #print("Reporte Generado!")
     tk.messagebox.showinfo("Reporte Generado", "El reporte ha sido generado con exito!")
     serialEntry.delete(0,len(NumSerie))
 
-def check():                                                 #Busca y lee reportes buscando un pass
+def check():                             #Busca y lee reportes buscando un pass
     print("-------------------  Buscando registo...  ---------------------")
     pathFile=open("Path.txt","r")                                               #Abre path.txt file
     for line in pathFile:
         if line.startswith("Origen: "):
             x=line.strip()
             initial_dir=x[8:]
-            print(initial_dir)
         if line.startswith("Destino: "):
             y=line.strip()
             destino=y[9:]
-            #print(destino)
     NumSerie=serialEntry.get()
     filename="LcdMain_Report[" + NumSerie
     status=0                                                                    #STATUS 0 SIN REGISTRO,  1 PASS, 2 FAIL
@@ -85,36 +76,31 @@ def check():                                                 #Busca y lee report
     TestTime=False
     PNstatus=False
     Serialstatus=False
+    oswalkiterations=0
+    totalfiles={}
     for root, dirs, files in os.walk(initial_dir):
-        pass
-    #print(files)
-    for name in files:
-        if name.find(NumSerie):
-            #print("Report found!")
+        for fileC in files:
+            totalfiles[fileC]=os.path.abspath(os.path.join(root, fileC))
+    for name in totalfiles:
+        extension=name.split(".")[1]
+        if name.startswith(filename) and extension == "html":
             versionNoAN=name[15:23]
-            reporteHTMLPath=os.path.abspath(os.path.join(root, name))
-            #print(reporteHTMLPath)
+            reporteHTMLPath=totalfiles.get(name)
+            print("Reporte Encontrado en : " + reporteHTMLPath)
             reporteHTML=open(reporteHTMLPath,"r",errors='ignore')
             i=0
-            #print(reporteHTML)
             for line in reporteHTML:
-                #print(line)
                 i=i+1
                 if line.startswith("<TD><B>Passed"):                        #Obtiene el Pass del reporte y actualiza status 
                     print("Passed")
                     status=1
-                    #print(status)
                 if line.startswith("<TD><B>Failed"):                        #Verifica Fail y actualiza status
                     print("Failed")
                     status=2
                 if status==1:
-                    #print(reporteHTMLPath)
                     if line.startswith("<td> Model Number:"):               #Verifica que tenga el modelo guardado en la tarjeta
                         splitedLinePN=line.split()
-                        #print("Split: " + splitedLinePN)
                         PN=splitedLinePN[3]
-                        #print(reporteHTMLPath)
-                        #print("PN: " + PN)
                         if PN=="</td>":
                             PNstatus=False
                         else:
@@ -122,7 +108,6 @@ def check():                                                 #Busca y lee report
                     if line.startswith("<td> Serial Number:"):              #Verifica que tenga el serial guardado en la tarjeta
                         splitedLineSerial=line.split()
                         Serial=splitedLineSerial[3]
-                        #print(Serial)
                         if Serial=="</td>":
                             Serialstatus=False
                         else:
@@ -130,7 +115,6 @@ def check():                                                 #Busca y lee report
                     if i==97:                                               #Obtiene la Fecha de Prueba
                         splittedLine=line.split()
                         date=splittedLine[1]
-                        #print("Date: " + date)
                         splittedDate=date.split("/")
                         if not len(splittedDate)==3:
                             splittedDate=date.split("-")
